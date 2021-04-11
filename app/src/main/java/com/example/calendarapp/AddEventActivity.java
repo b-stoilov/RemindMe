@@ -4,13 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-public class AddEventActivity extends AppCompatActivity {
+public class AddEventActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     Button btnBack;
     Button btnSubmit;
     EditText etEventName;
@@ -37,16 +39,18 @@ public class AddEventActivity extends AppCompatActivity {
         int spinnerMinutesId = R.id.spinnerMinutes;
         int spinnerHoursId = R.id.spinnerHours;
 
+        spinnerMinutes.setOnItemClickListener((AdapterView.OnItemClickListener) this);
+
+        @SuppressLint("ResourceType")
+        ArrayAdapter<Integer> adapterMins = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mins);
+        adapterMins.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerMinutes.setAdapter(adapterMins);
 
 
         @SuppressLint("ResourceType")
-        ArrayAdapter<Integer> adapter = new ArrayAdapter(this, spinnerMinutesId, mins);
+        ArrayAdapter<Integer> adapterHours = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, hours);
 
-        spinnerHours.setAdapter(adapter);
-
-        @SuppressLint("ResourceType")
-        ArrayAdapter<Integer> adapter1 = new ArrayAdapter(this, spinnerHoursId, hours);
-
+        spinnerHours.setAdapter(adapterHours);
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,4 +77,14 @@ public class AddEventActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String text = parent.getItemAtPosition(position).toString();
+        Log.d("value of drop down", text);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }
