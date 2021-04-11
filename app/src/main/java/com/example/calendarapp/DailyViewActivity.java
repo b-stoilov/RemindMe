@@ -6,36 +6,32 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CalendarView;
 
-public class MainActivity extends AppCompatActivity {
-
+public class DailyViewActivity extends AppCompatActivity {
+    Button btnCalendarView;
     Button btnAddEvent;
-    Button btnDailyView;
-    CalendarView calendarView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_main_activity);
+        setContentView(R.layout.fragment_daily_view);
 
-        btnAddEvent = findViewById(R.id.buttonAddEvent);
-        btnDailyView = (Button) findViewById(R.id.buttonDailyView);
+        btnCalendarView = findViewById(R.id.buttonCalendarView);
+        btnAddEvent = findViewById(R.id.buttonAdd);
 
-        btnDailyView.setOnClickListener(new View.OnClickListener() {
+        btnCalendarView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openDailyView();
+                openCalendarView();
             }
         });
-        
+
         btnAddEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openAddEvent();
             }
         });
-
     }
 
     private void openAddEvent() {
@@ -43,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void openDailyView() {
-        Intent intent = new Intent(this, DailyViewActivity.class);
+    private void openCalendarView() {
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 }
