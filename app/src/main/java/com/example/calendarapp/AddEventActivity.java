@@ -6,11 +6,16 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -25,7 +30,10 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
     EditText editTextHrs;
     EditText editTextMins;
     EditText etDate;
+    EditText editTextEventName;
+    EditText editTextEventDescr;
     String date;
+    Event event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +57,8 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
         spinnerMinutes = findViewById(R.id.spinnerMinutes);
         editTextHrs = findViewById(R.id.editTextTextHoursSelect);
         editTextMins = findViewById(R.id.editTextTextMinsSelect);
+        editTextEventName = findViewById(R.id.editTextEventName);
+        editTextEventDescr = findViewById(R.id.editTextEventDescription);
         etDate = findViewById(R.id.editTextDate2);
 
 
@@ -78,7 +88,13 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveEvent();
+                event = new Event(editTextEventName.getText().toString(), editTextEventDescr.getText().toString(), null);
+                if (event.getDate() == null || event.getEventTitle() == null) {
+                    showPopup(v, R.layout.popup_empty_field);
+                } else {
+                    saveEvent();
+                }
+
             }
         });
 
@@ -90,9 +106,10 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
         });
     }
 
+
     private void prevActivity() {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     private void openCalendar() {
@@ -101,6 +118,9 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
     }
 
     private void saveEvent() {
+
+        Log.d("title of event", event.getEventTitle());
+        Log.d("description", editTextEventDescr.getText().toString());
     }
 
     private void addnumbers (Integer[] mins) {
@@ -130,6 +150,36 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    void showPopup (View v, int popup) {
+        // Create a pop up that the question has already been answered:
+        // inflate the layout of the popup window
+        LayoutInflater inflater = (LayoutInflater)
+                v.getContext().getSystemService
+                        (v.getContext().LAYOUT_INFLATER_SERVICE);
+        View popupView =
+                inflater.inflate(popup, null);
+
+        // create the popup window
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        // Makes sure you can also press outside the popup to dismiss it:
+        boolean focusable = true;
+        PopupWindow popupWindow =
+                new PopupWindow(popupView, width, height, focusable);
+
+        // show the popup window
+        popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+
+        // dismiss the popup window when touched
+        popupView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                popupWindow.dismiss();
+                return true;
+            }
+        });
     }
 
 }

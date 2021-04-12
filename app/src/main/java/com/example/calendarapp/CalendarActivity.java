@@ -50,10 +50,10 @@ public class CalendarActivity extends AppCompatActivity {
         buttonSaveDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
+                if (textViewDate.getText().equals("DD/MM/YYYY")) {
+                    new AddEventActivity().showPopup(v, R.layout.popup_invalid_calendar_date);
+                } else {
                     submitDate();
-                } catch (Exception e) {
-
                 }
 
             }
