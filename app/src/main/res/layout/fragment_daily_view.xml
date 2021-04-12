@@ -48,7 +48,7 @@
         android:layout_marginStart="47dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="47dp"
-        android:text="@string/add_event"
+        android:text="@string/daily_view"
         app:layout_constraintEnd_toStartOf="@+id/buttonAdd"
         app:layout_constraintStart_toEndOf="@+id/buttonCalendarView"
         app:layout_constraintTop_toTopOf="parent" />

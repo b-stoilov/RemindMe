@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">CalendarApp</string>
     <string name="calendar_view">Calendar View</string>
-    <string name="daily_view">daily view</string>
+    <string name="daily_view">Daily view</string>
     <string name="add">add</string>
     <string name="submit">Submit</string>
     <string name="add_event">Add event</string>
@@ -12,4 +12,12 @@
     <string name="enter_description">Enter description</string>
     <string name="select_hour">Select hour</string>
     <string name="select_date">Select date</string>
+    <string name="dd_mm_yyyy">DD/MM/YYYY</string>
+    <string name="title_of_the_event">Title of the event...</string>
+    <string name="description_of_event">Description of event...</string>
+    <string name="hours">Hours:</string>
+    <string name="minutes">Minutes:</string>
+    <string name="calendar">Calendar</string>
+    <string name="please_select_your_date">Please select your date:</string>
+    <string name="selected_date_is">Selected date is:</string>
 </resources>

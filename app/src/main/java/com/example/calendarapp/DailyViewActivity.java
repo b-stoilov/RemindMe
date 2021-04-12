@@ -36,6 +36,7 @@ public class DailyViewActivity extends AppCompatActivity {
 
     private void openAddEvent() {
         Intent intent = new Intent(this, AddEventActivity.class);
+        intent.putExtra("from", "dailyView");
         startActivity(intent);
     }
 

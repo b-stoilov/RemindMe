@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void openAddEvent() {
         Intent intent = new Intent(this, AddEventActivity.class);
+        intent.putExtra("from", "calendarView");
         startActivity(intent);
     }
 
