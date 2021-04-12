@@ -23,8 +23,6 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
     Button btnBack;
     Button btnSubmit;
     Button btnCalendar;
-    EditText etEventName;
-    EditText eventDescription;
     Spinner spinnerHours;
     Spinner spinnerMinutes;
     EditText editTextHrs;
@@ -66,13 +64,13 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
         spinnerHours.setOnItemSelectedListener(this);
 
         @SuppressLint("ResourceType")
-        ArrayAdapter<Integer> adapterMins = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mins);
+        ArrayAdapter adapterMins = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mins);
         adapterMins.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerMinutes.setAdapter(adapterMins);
 
 
         @SuppressLint("ResourceType")
-        ArrayAdapter<Integer> adapterHours = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, hours);
+        ArrayAdapter adapterHours = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, hours);
         adapterHours.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerHours.setAdapter(adapterHours);
 
@@ -153,7 +151,6 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
     }
 
     void showPopup (View v, int popup) {
-        // Create a pop up that the question has already been answered:
         // inflate the layout of the popup window
         LayoutInflater inflater = (LayoutInflater)
                 v.getContext().getSystemService
