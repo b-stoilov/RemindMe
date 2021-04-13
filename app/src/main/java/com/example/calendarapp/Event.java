@@ -1,40 +1,44 @@
 package com.example.calendarapp;
 
-import java.time.LocalDate;
-import java.util.Date;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+@Entity(tableName = "event_table")
 public class Event {
+
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
     private String eventTitle;
     private String eventDescription;
-    private LocalDate eventDate;
+    private String eventDate;
 
-    public Event (String title, String description, LocalDate date) {
-        eventTitle = title;
-        eventDescription = description;
-        eventDate = date;
+    public Event(String eventTitle, String eventDescription, String eventDate) {
+        this.eventTitle = eventTitle;
+        this.eventDescription = eventDescription;
+        this.eventDate = eventDate;
     }
 
-    public void setTitle (String title) {
-        eventTitle = title;
-    };
-
-    public void setDescription (String description) {
-        eventDescription = description;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setDate (LocalDate date) {
-        eventDate = date;
+    public int getId() {
+        return id;
     }
 
-    public String getEventTitle () {
+    public String getEventTitle() {
         return eventTitle;
     }
 
-    public String getEventDescription () {
-        return  eventDescription;
+    public String getEventDescription() {
+        return eventDescription;
     }
 
-    public LocalDate getDate () {
+    public String getEventDate() {
         return eventDate;
     }
 }

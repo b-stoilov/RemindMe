@@ -17,7 +17,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 public class AddEventActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     Button btnBack;
@@ -31,7 +30,7 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
     EditText editTextEventName;
     EditText editTextEventDescr;
     String date;
-    Event event;
+    Events events;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +85,8 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                event = new Event(editTextEventName.getText().toString(), editTextEventDescr.getText().toString(), null);
-                if (event.getDate() == null || event.getEventTitle() == null) {
+                events = new Events(editTextEventName.getText().toString(), editTextEventDescr.getText().toString(), null);
+                if (events.getDate() == null || events.getEventTitle() == null) {
                     showPopup(v, R.layout.popup_empty_field);
                 } else {
                     saveEvent();
@@ -117,7 +116,7 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
 
     private void saveEvent() {
 
-        Log.d("title of event", event.getEventTitle());
+        Log.d("title of event", events.getEventTitle());
         Log.d("description", editTextEventDescr.getText().toString());
     }
 
