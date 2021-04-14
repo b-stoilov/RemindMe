@@ -23,4 +23,5 @@
     <string name="invalid_event_name_data_or_hour">Invalid event name or date</string>
     <string name="please_select_a_valid_date">Please select a valid date</string>
     <string name="act_hours">hours</string>
+    <string name="empty_not_saved">Value empty not saved</string>
 </resources>

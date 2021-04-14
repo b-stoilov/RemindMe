@@ -1,10 +1,12 @@
 package com.example.calendarapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ComponentActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -31,6 +33,8 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
     EditText editTextEventDescr;
     String date;
     Events events;
+
+    public static final String EXTRA_REPLY = "com.example.android.wordlistsql.REPLY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,12 +89,15 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                events = new Events(editTextEventName.getText().toString(), editTextEventDescr.getText().toString(), null);
-                if (events.getDate() == null || events.getEventTitle() == null) {
-                    showPopup(v, R.layout.popup_empty_field);
-                } else {
-                    saveEvent();
-                }
+
+                saveEvent();
+
+//                events = new Events(editTextEventName.getText().toString(), editTextEventDescr.getText().toString(), null);
+//                if (events.getDate() == null || events.getEventTitle() == null) {
+//                    showPopup(v, R.layout.popup_empty_field);
+//                } else {
+//                    saveEvent();
+//                }
 
             }
         });
@@ -115,9 +122,31 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
     }
 
     private void saveEvent() {
+        Intent replyIntent = new Intent(this, DailyViewActivity.class);
+        if (TextUtils.isEmpty(editTextEventName.getText()) ||
+                TextUtils.isEmpty(etDate.getText())) {
+            setResult(RESULT_CANCELED, replyIntent);
+        } else {
+            String eTitle = editTextEventName.getText().toString();
+            String eDescr = editTextEventDescr.getText().toString();
 
-        Log.d("title of event", events.getEventTitle());
-        Log.d("description", editTextEventDescr.getText().toString());
+            if (eDescr.isEmpty()) {
+                eDescr = "";
+            }
+
+            String eHour = editTextHrs.getText().toString() + ":" + editTextMins.getText().toString();
+            String eDate = etDate.getText().toString();
+
+            replyIntent.putExtra("title", eTitle);
+            replyIntent.putExtra("description", eDescr);
+            replyIntent.putExtra("hour", eHour);
+            replyIntent.putExtra("date", eDate);
+
+
+            setResult(RESULT_OK, replyIntent);
+
+        }
+        startActivity(replyIntent);
     }
 
     private void addnumbers (Integer[] mins) {

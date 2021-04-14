@@ -10,21 +10,33 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.time.LocalDate;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-@Database(entities = Event.class, version = 1)
+@Database(entities = {Event.class}, version = 1, exportSchema = false)
 public abstract class EventDatabase extends RoomDatabase {
 
     private static EventDatabase instance;
 
-    public abstract EventDAO eventDAO();
+    public abstract EventDAO eventDao();
 
-    public static synchronized EventDatabase getInstance(Context context) {
+    private static final int NUMBER_OF_THREADS = 4;
+
+    static final ExecutorService databaseWriteExecutor =
+            Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+
+    public static EventDatabase getDatabase(Context context) {
         if (instance == null) {
-            instance = Room.databaseBuilder(context.getApplicationContext(), EventDatabase.class,
-                    "event_database")
-                    .fallbackToDestructiveMigration()
-                    .addCallback(roomCallback)
-                    .build();
+            synchronized (EventDatabase.class) {
+                if (instance == null) {
+                    instance = Room.databaseBuilder(context.getApplicationContext(), EventDatabase.class,
+                            "event_database")
+                            .addCallback(roomCallback)
+                            .build();
+                }
+            }
+
         }
 
         return instance;
@@ -35,22 +47,34 @@ public abstract class EventDatabase extends RoomDatabase {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
-            new PopulateDbAsyncTask(instance).execute();
+
+            databaseWriteExecutor.execute(() -> {
+                EventDAO eventDAO = instance.eventDao();
+
+                eventDAO.deleteAllEvents();
+
+                Event event = new Event("Wash dishes", "wash dishes",  "2021-04-13", "12:00");
+                eventDAO.insert(event);
+
+                event = new Event("Call Lora", "call lora",  "2022-04-13", "13:00");
+                eventDAO.insert(event);
+
+            });
         }
     };
-
-    private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
-        private EventDAO eventDAO;
-
-        private PopulateDbAsyncTask (EventDatabase ed) {
-            this.eventDAO = ed.eventDAO();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            eventDAO.insert(new Event("Wash dishes", "",  "2021-04-13"));
-            eventDAO.insert(new Event("Call Lora", "",  "2022-04-13"));
-            return null;
-        }
-    }
+//
+//    private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
+//        private EventDAO eventDAO;
+//
+//        private PopulateDbAsyncTask (EventDatabase ed) {
+//            this.eventDAO = ed.eventDao();
+//        }
+//
+//        @Override
+//        protected Void doInBackground(Void... voids) {
+//            eventDAO.insert();
+//            eventDAO.insert(
+//            return null;
+//        }
+//    }
 }
