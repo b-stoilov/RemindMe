@@ -81,46 +81,13 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
 
         etDate.setText(date);
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                prevActivity();
-            }
-        });
+        btnBack.setOnClickListener(v -> prevActivity());
 
         btnSubmit.setOnClickListener(view -> {
-            Intent replyIntent = new Intent();
-            if (TextUtils.isEmpty(editTextEventName.getText()) ||
-                    TextUtils.isEmpty(etDate.getText())) {
-                setResult(RESULT_CANCELED, replyIntent);
-            } else {
-                String eTitle = editTextEventName.getText().toString();
-                String eDescr = editTextEventDescr.getText().toString();
-
-                if (eDescr.isEmpty()) {
-                    eDescr = null;
-                }
-
-                String eHour = editTextHrs.getText().toString() + ":" + editTextMins.getText().toString();
-                String eDate = etDate.getText().toString();
-
-
-                replyIntent.putExtra(EXTRA_TITLE, eTitle);
-                replyIntent.putExtra(EXTRA_DESC, eDescr);
-                replyIntent.putExtra(EXTRA_HOUR, eHour);
-                replyIntent.putExtra(EXTRA_DATE, eDate);
-                setResult(RESULT_OK, replyIntent);
-            }
-
-            finish();
+            saveEvent();
         });
 
-        btnCalendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openCalendar();
-            }
-        });
+        btnCalendar.setOnClickListener(view -> openCalendar());
     }
 
 
@@ -144,17 +111,20 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
             String eDescr = editTextEventDescr.getText().toString();
 
             if (eDescr.isEmpty()) {
-                eDescr = "";
+                eDescr = null;
             }
 
             String eHour = editTextHrs.getText().toString() + ":" + editTextMins.getText().toString();
             String eDate = etDate.getText().toString();
 
 
-
+            replyIntent.putExtra(EXTRA_TITLE, eTitle);
+            replyIntent.putExtra(EXTRA_DESC, eDescr);
+            replyIntent.putExtra(EXTRA_HOUR, eHour);
+            replyIntent.putExtra(EXTRA_DATE, eDate);
             setResult(RESULT_OK, replyIntent);
-
         }
+
         finish();
     }
 

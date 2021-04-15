@@ -82,7 +82,7 @@ class EventHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindDate (String text) {
-        textViewHour.setText(text);
+        textViewDate.setText(text);
     }
 
     public void bindHour (String text) {

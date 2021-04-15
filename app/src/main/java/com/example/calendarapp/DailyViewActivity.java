@@ -36,7 +36,6 @@ public class DailyViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_daily_view);
 
-        Bundle extras = getIntent().getExtras();
 
 
         rv = findViewById(R.id.recycler_view);
@@ -65,12 +64,7 @@ public class DailyViewActivity extends AppCompatActivity {
         btnCalendarView = findViewById(R.id.buttonCalendarView);
         btnAddEvent = findViewById(R.id.buttonAdd);
 
-        btnCalendarView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openCalendarView();
-            }
-        });
+        btnCalendarView.setOnClickListener(v -> openCalendarView());
 
         btnAddEvent.setOnClickListener(new View.OnClickListener() {
             @Override

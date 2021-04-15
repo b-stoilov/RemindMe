@@ -53,11 +53,6 @@ public abstract class EventDatabase extends RoomDatabase {
 
                 eventDAO.deleteAllEvents();
 
-                Event event = new Event("Wash dishes", "wash dishes",  "13/04/2021", "12:00");
-                eventDAO.insert(event);
-
-                event = new Event("Call Lora", "call lora",  "13/04/2021", "13:00");
-                eventDAO.insert(event);
 
             });
         }
