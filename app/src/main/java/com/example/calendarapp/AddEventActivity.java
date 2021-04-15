@@ -32,9 +32,11 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
     EditText editTextEventName;
     EditText editTextEventDescr;
     String date;
-    Events events;
 
-    public static final String EXTRA_REPLY = "com.example.android.wordlistsql.REPLY";
+    public static final String EXTRA_TITLE = "com.example.application.example.TITLE";
+    public static final String EXTRA_DESC = "com.example.application.example.DESC";
+    public static final String EXTRA_HOUR = "com.example.application.example.HOUR";
+    public static final String EXTRA_DATE = "com.example.application.example.DATE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,20 +88,31 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
             }
         });
 
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnSubmit.setOnClickListener(view -> {
+            Intent replyIntent = new Intent();
+            if (TextUtils.isEmpty(editTextEventName.getText()) ||
+                    TextUtils.isEmpty(etDate.getText())) {
+                setResult(RESULT_CANCELED, replyIntent);
+            } else {
+                String eTitle = editTextEventName.getText().toString();
+                String eDescr = editTextEventDescr.getText().toString();
 
-                saveEvent();
+                if (eDescr.isEmpty()) {
+                    eDescr = null;
+                }
 
-//                events = new Events(editTextEventName.getText().toString(), editTextEventDescr.getText().toString(), null);
-//                if (events.getDate() == null || events.getEventTitle() == null) {
-//                    showPopup(v, R.layout.popup_empty_field);
-//                } else {
-//                    saveEvent();
-//                }
+                String eHour = editTextHrs.getText().toString() + ":" + editTextMins.getText().toString();
+                String eDate = etDate.getText().toString();
 
+
+                replyIntent.putExtra(EXTRA_TITLE, eTitle);
+                replyIntent.putExtra(EXTRA_DESC, eDescr);
+                replyIntent.putExtra(EXTRA_HOUR, eHour);
+                replyIntent.putExtra(EXTRA_DATE, eDate);
+                setResult(RESULT_OK, replyIntent);
             }
+
+            finish();
         });
 
         btnCalendar.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +135,7 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
     }
 
     private void saveEvent() {
-        Intent replyIntent = new Intent(this, DailyViewActivity.class);
+        Intent replyIntent = new Intent();
         if (TextUtils.isEmpty(editTextEventName.getText()) ||
                 TextUtils.isEmpty(etDate.getText())) {
             setResult(RESULT_CANCELED, replyIntent);
@@ -137,16 +150,12 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
             String eHour = editTextHrs.getText().toString() + ":" + editTextMins.getText().toString();
             String eDate = etDate.getText().toString();
 
-            replyIntent.putExtra("title", eTitle);
-            replyIntent.putExtra("description", eDescr);
-            replyIntent.putExtra("hour", eHour);
-            replyIntent.putExtra("date", eDate);
 
 
             setResult(RESULT_OK, replyIntent);
 
         }
-        startActivity(replyIntent);
+        finish();
     }
 
     private void addnumbers (Integer[] mins) {

@@ -37,13 +37,7 @@ public class DailyViewActivity extends AppCompatActivity {
         setContentView(R.layout.fragment_daily_view);
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            title = extras.getString("title");
-            descr = extras.getString("description");
-            hour = extras.getString("hour");
-            date = extras.getString("date");
 
-        }
 
         rv = findViewById(R.id.recycler_view);
         eventAdapter = new EventAdapter(new EventAdapter.WordDiff());
@@ -56,6 +50,17 @@ public class DailyViewActivity extends AppCompatActivity {
         eventViewModel.getAllEvents().observe(this, events -> {
             eventAdapter.submitList(events);
         });
+
+//        if (extras != null) {
+//            title = extras.getString("title");
+//            descr = extras.getString("description");
+//            hour = extras.getString("hour");
+//            date = extras.getString("date");
+//
+//        }
+
+
+
 
         btnCalendarView = findViewById(R.id.buttonCalendarView);
         btnAddEvent = findViewById(R.id.buttonAdd);
@@ -87,11 +92,18 @@ public class DailyViewActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Event event = new Event(title, descr, date, hour);
+            String title = data.getStringExtra(AddEventActivity.EXTRA_TITLE);
+            String desc = data.getStringExtra(AddEventActivity.EXTRA_DESC);
+            String hour = data.getStringExtra(AddEventActivity.EXTRA_HOUR);
+            String date = data.getStringExtra(AddEventActivity.EXTRA_DATE);
+
+            Event event = new Event(title, desc, date, hour);
+
             eventViewModel.insert(event);
         } else {
             Toast.makeText(

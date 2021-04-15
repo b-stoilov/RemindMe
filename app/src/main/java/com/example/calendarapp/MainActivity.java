@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private void openAddEvent() {
         Intent intent = new Intent(this, AddEventActivity.class);
         intent.putExtra("from", "calendarView");
-        startActivity(intent);
+        startActivityForResult(intent, DailyViewActivity.NEW_WORD_ACTIVITY_REQUEST_CODE);
     }
 
     private void openDailyView() {
