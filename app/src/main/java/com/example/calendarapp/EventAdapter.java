@@ -38,6 +38,10 @@ public class EventAdapter extends ListAdapter<Event, EventHolder> {
         holder.bindHour(currentEvent.getEventHour());
     }
 
+    public Event getEventAtPos (int position) {
+        return getItem(position);
+    }
+
     static class WordDiff extends DiffUtil.ItemCallback<Event> {
 
         @Override

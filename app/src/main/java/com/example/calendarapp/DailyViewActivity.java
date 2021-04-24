@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,16 +51,19 @@ public class DailyViewActivity extends AppCompatActivity {
             eventAdapter.submitList(events);
         });
 
-//        if (extras != null) {
-//            title = extras.getString("title");
-//            descr = extras.getString("description");
-//            hour = extras.getString("hour");
-//            date = extras.getString("date");
-//
-//        }
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
 
-
-
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                eventViewModel.delete(eventAdapter.getEventAtPos(viewHolder.getAdapterPosition()));
+                Toast.makeText(DailyViewActivity.this, "Event deleted", Toast.LENGTH_SHORT).show();
+            }
+        }).attachToRecyclerView(rv);
 
         btnCalendarView = findViewById(R.id.buttonCalendarView);
         btnAddEvent = findViewById(R.id.buttonAdd);
