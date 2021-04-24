@@ -2,6 +2,8 @@ package com.example.calendarapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -9,6 +11,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Layout;
@@ -27,6 +31,8 @@ public class DailyViewActivity extends AppCompatActivity {
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
     private EventViewModel eventViewModel;
 
+    private NotificationManagerCompat notificationManager;
+
     String title;
     String descr;
     String hour;
@@ -36,8 +42,6 @@ public class DailyViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_daily_view);
-
-
 
         rv = findViewById(R.id.recycler_view);
         eventAdapter = new EventAdapter(new EventAdapter.WordDiff());
@@ -78,6 +82,8 @@ public class DailyViewActivity extends AppCompatActivity {
         });
 
     }
+
+
 
     private void openAddEvent() {
         Intent intent = new Intent(this, AddEventActivity.class);

@@ -2,8 +2,11 @@ package com.example.calendarapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ComponentActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -33,6 +36,8 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
     EditText editTextEventDescr;
     String date;
 
+    NotificationManagerCompat notificationManager;
+
     public static final String EXTRA_TITLE = "com.example.application.example.TITLE";
     public static final String EXTRA_DESC = "com.example.application.example.DESC";
     public static final String EXTRA_HOUR = "com.example.application.example.HOUR";
@@ -42,6 +47,8 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_add_event);
+
+        notificationManager = NotificationManagerCompat.from(this);
 
         Intent intent = getIntent();
         date = intent.getStringExtra(CalendarActivity.EXTRA_TEXT);
@@ -83,11 +90,26 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
 
         btnBack.setOnClickListener(v -> prevActivity());
 
-        btnSubmit.setOnClickListener(view -> {
+        btnSubmit.setOnClickListener(v -> {
             saveEvent();
+            sendNotification();
         });
 
-        btnCalendar.setOnClickListener(view -> openCalendar());
+        btnCalendar.setOnClickListener(v -> openCalendar());
+    }
+
+    private void sendNotification() {
+        String eventName = editTextEventName.getText().toString();
+        String eventDescription = editTextEventDescr.getText().toString();
+
+        Notification notification = new NotificationCompat.Builder(this, App.CHANNEL_1)
+                .setSmallIcon(R.drawable.ic_baseline_5g_24)
+                .setContentTitle(eventName)
+                .setContentText(eventDescription)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .build();
+
+        notificationManager.notify(1, notification);
     }
 
 
