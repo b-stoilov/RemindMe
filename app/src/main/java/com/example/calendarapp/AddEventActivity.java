@@ -6,7 +6,10 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -22,6 +25,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.util.Calendar;
 
 public class AddEventActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     Button btnBack;
@@ -42,6 +48,9 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
     public static final String EXTRA_DESC = "com.example.application.example.DESC";
     public static final String EXTRA_HOUR = "com.example.application.example.HOUR";
     public static final String EXTRA_DATE = "com.example.application.example.DATE";
+
+    final static int req1=1;
+    public String a = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,9 +102,34 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
         btnSubmit.setOnClickListener(v -> {
             saveEvent();
             sendNotification();
+            saveAlarm();
         });
 
         btnCalendar.setOnClickListener(v -> openCalendar());
+    }
+
+    private void setAlarm(Calendar target){
+
+    }
+
+    private void saveAlarm() {
+        String date = etDate.getText().toString();
+        int year = Integer.parseInt(date.substring(date.length() - 4));
+        int month = Integer.parseInt(date.substring(3, 5));
+        int day = Integer.parseInt(date.substring(0, 2));
+        int hour = Integer.parseInt(editTextHrs.getText().toString());
+        int mins = Integer.parseInt(editTextMins.getText().toString());
+
+        Calendar c = Calendar.getInstance();
+        c.set(year, month, day, hour, mins);
+
+
+        Intent intent = new Intent(getBaseContext(), AddEventActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), req1, intent, 0);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        Toast.makeText(this, "Reminder saved", Toast.LENGTH_LONG).show();
+
     }
 
     private void sendNotification() {
