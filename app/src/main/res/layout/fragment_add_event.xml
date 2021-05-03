@@ -52,25 +52,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewEventTitle" />
 
-    <EditText
-        android:id="@+id/editTextDate2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="27dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:inputType="date"
-        android:hint="@string/dd_mm_yyyy"
-        app:layout_constraintBottom_toBottomOf="@+id/textViewEventDate"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="324dp"
-        android:text="@string/select_hour"
+        android:text="@string/select_time"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -126,78 +114,52 @@
         app:layout_constraintStart_toEndOf="@+id/textViewEventDescription"
         app:layout_constraintTop_toBottomOf="@+id/editTextEventName" />
 
-    <Spinner
-        android:id="@+id/spinnerHours"
-        android:layout_width="76dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="97dp"
-        android:layout_marginTop="92dp"
-        android:layout_marginEnd="27dp"
-        android:layout_marginBottom="19dp"
-        android:background="@android:drawable/btn_dropdown"
-        android:spinnerMode="dropdown"
-        app:layout_constraintBottom_toTopOf="@+id/editTextDate2"
-        app:layout_constraintEnd_toStartOf="@+id/spinnerMinutes"
+    <TextView
+        android:id="@+id/textViewTimePicked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="79dp"
+        android:layout_marginTop="103dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="48dp"
+        android:text="@string/no_time"
+        app:layout_constraintBottom_toTopOf="@+id/textViewDatePicked"
+        app:layout_constraintEnd_toStartOf="@+id/buttonPickTime"
         app:layout_constraintStart_toEndOf="@+id/textView6"
-        app:layout_constraintTop_toBottomOf="@+id/editTextEventDescription"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <Spinner
-        android:id="@+id/spinnerMinutes"
-        android:layout_width="76dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="27dp"
-        android:layout_marginTop="92dp"
-        android:layout_marginEnd="52dp"
-        android:layout_marginBottom="19dp"
-        android:background="@android:drawable/btn_dropdown"
-        android:spinnerMode="dropdown"
-        android:textColor="#000000"
-        app:layout_constraintBottom_toTopOf="@+id/editTextDate2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/spinnerHours"
         app:layout_constraintTop_toBottomOf="@+id/editTextEventDescription" />
 
     <Button
-        android:id="@+id/buttonCalendar"
+        android:id="@+id/buttonPickTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="153dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="127dp"
-        android:text="@string/calendar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDate2" />
-
-    <EditText
-        android:id="@+id/editTextTextHoursSelect"
-        android:layout_width="76dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="157dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="54dp"
-        android:layout_marginBottom="16dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="@string/hours"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerHours"
-        app:layout_constraintEnd_toStartOf="@+id/editTextTextMinsSelect"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextEventDescription" />
-
-    <EditText
-        android:id="@+id/editTextTextMinsSelect"
-        android:layout_width="76dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="16dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="@string/minutes"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerMinutes"
+        android:layout_marginTop="90dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="22dp"
+        android:text="@string/pick_time"
+        app:layout_constraintBottom_toTopOf="@+id/buttonPickDate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextEventDescription" />
+
+    <TextView
+        android:id="@+id/textViewDatePicked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="76dp"
+        android:layout_marginTop="47dp"
+        android:layout_marginEnd="40dp"
+        android:text="@string/no_date"
+        app:layout_constraintEnd_toStartOf="@+id/buttonPickDate"
+        app:layout_constraintStart_toEndOf="@+id/textViewEventDate"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTimePicked" />
+
+    <Button
+        android:id="@+id/buttonPickDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:layout_marginEnd="21dp"
+        android:text="pick date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonPickTime" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

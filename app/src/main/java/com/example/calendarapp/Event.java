@@ -26,6 +26,7 @@ public class Event {
         this.eventHour = eventHour;
     }
 
+
     public void setId(int id) {
         this.id = id;
     }

@@ -1,38 +1,39 @@
 package com.example.calendarapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ComponentActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
+import android.app.DatePickerDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.Calendar;
 
-public class AddEventActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class AddEventActivity extends AppCompatActivity  {
     Button btnBack;
     Button btnSubmit;
-    Button btnCalendar;
+    Button btnPickTime;
+    Button btnPickDate;
     Spinner spinnerHours;
     Spinner spinnerMinutes;
     EditText editTextHrs;
@@ -40,7 +41,12 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
     EditText etDate;
     EditText editTextEventName;
     EditText editTextEventDescr;
+    TextView textViewTimePicked;
+    TextView textViewDatePicked;
+
     String date;
+    String timeToNotify;
+    String selectedDate;
 
     NotificationManagerCompat notificationManager;
 
@@ -71,66 +77,81 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
 
         btnBack = findViewById(R.id.buttonBack);
         btnSubmit = findViewById(R.id.buttonSubmit);
-        btnCalendar = findViewById(R.id.buttonCalendar);
-        spinnerHours = findViewById(R.id.spinnerHours);
-        spinnerMinutes = findViewById(R.id.spinnerMinutes);
-        editTextHrs = findViewById(R.id.editTextTextHoursSelect);
-        editTextMins = findViewById(R.id.editTextTextMinsSelect);
         editTextEventName = findViewById(R.id.editTextEventName);
         editTextEventDescr = findViewById(R.id.editTextEventDescription);
-        etDate = findViewById(R.id.editTextDate2);
+        btnPickTime = findViewById(R.id.buttonPickTime);
+        btnPickDate = findViewById(R.id.buttonPickDate);
+        textViewTimePicked = findViewById(R.id.textViewTimePicked);
+        textViewDatePicked = findViewById(R.id.textViewDatePicked);
 
 
-        spinnerMinutes.setOnItemSelectedListener(this);
-        spinnerHours.setOnItemSelectedListener(this);
-
-        @SuppressLint("ResourceType")
-        ArrayAdapter adapterMins = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mins);
-        adapterMins.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerMinutes.setAdapter(adapterMins);
-
-
-        @SuppressLint("ResourceType")
-        ArrayAdapter adapterHours = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, hours);
-        adapterHours.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerHours.setAdapter(adapterHours);
-
-        etDate.setText(date);
 
         btnBack.setOnClickListener(v -> prevActivity());
 
         btnSubmit.setOnClickListener(v -> {
             saveEvent();
-            sendNotification();
-            saveAlarm();
         });
 
-        btnCalendar.setOnClickListener(v -> openCalendar());
+        btnPickTime.setOnClickListener(v -> selectTime());
+        btnPickDate.setOnClickListener(v -> selectDate());
+
+    }
+
+    private void selectDate() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                selectedDate = day + "/" + (month + 1) + "/" + year;
+                textViewDatePicked.setText(selectedDate);
+            }
+        }, year, month, day);
+
+        datePickerDialog.show();
+    }
+
+    private void selectTime() {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int mins = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                timeToNotify = hourOfDay + ":" + minute;
+                textViewTimePicked.setText(timeToNotify);
+            }
+        }, hour, mins, false);
+        timePickerDialog.show();
     }
 
     private void setAlarm(Calendar target){
 
     }
 
-    private void saveAlarm() {
-        String date = etDate.getText().toString();
-        int year = Integer.parseInt(date.substring(date.length() - 4));
-        int month = Integer.parseInt(date.substring(3, 5));
-        int day = Integer.parseInt(date.substring(0, 2));
-        int hour = Integer.parseInt(editTextHrs.getText().toString());
-        int mins = Integer.parseInt(editTextMins.getText().toString());
-
-        Calendar c = Calendar.getInstance();
-        c.set(year, month, day, hour, mins);
-
-
-        Intent intent = new Intent(getBaseContext(), AddEventActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), req1, intent, 0);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
-        Toast.makeText(this, "Reminder saved", Toast.LENGTH_LONG).show();
-
-    }
+//    private void saveAlarm() {
+//        String date = etDate.getText().toString();
+//        int year = Integer.parseInt(date.substring(date.length() - 4));
+//        int month = Integer.parseInt(date.substring(3, 5));
+//        int day = Integer.parseInt(date.substring(0, 2));
+//        int hour = Integer.parseInt(editTextHrs.getText().toString());
+//        int mins = Integer.parseInt(editTextMins.getText().toString());
+//
+//        Calendar c = Calendar.getInstance();
+//        c.set(year, month, day, hour, mins);
+//
+//
+//        Intent intent = new Intent(getBaseContext(), AddEventActivity.class);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), req1, intent, 0);
+//        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+//        alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+//        Toast.makeText(this, "Reminder saved", Toast.LENGTH_LONG).show();
+//
+//    }
 
     private void sendNotification() {
         String eventName = editTextEventName.getText().toString();
@@ -159,29 +180,30 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
 
     private void saveEvent() {
         Intent replyIntent = new Intent();
-        if (TextUtils.isEmpty(editTextEventName.getText()) ||
-                TextUtils.isEmpty(etDate.getText())) {
+        if (TextUtils.isEmpty(textViewDatePicked.getText()) ||
+                TextUtils.isEmpty(textViewTimePicked.getText())) {
             setResult(RESULT_CANCELED, replyIntent);
         } else {
-            String eTitle = editTextEventName.getText().toString();
-            String eDescr = editTextEventDescr.getText().toString();
+            String eventTitle = editTextEventName.getText().toString();
+            String eventDescr = editTextEventDescr.getText().toString();
 
-            if (eDescr.isEmpty()) {
-                eDescr = null;
+            if (eventDescr.isEmpty()) {
+                eventDescr = null;
             }
 
-            String eHour = editTextHrs.getText().toString() + ":" + editTextMins.getText().toString();
-            String eDate = etDate.getText().toString();
+
+            String eventDate = textViewDatePicked.getText().toString();
 
 
-            replyIntent.putExtra(EXTRA_TITLE, eTitle);
-            replyIntent.putExtra(EXTRA_DESC, eDescr);
-            replyIntent.putExtra(EXTRA_HOUR, eHour);
-            replyIntent.putExtra(EXTRA_DATE, eDate);
+            replyIntent.putExtra(EXTRA_TITLE, eventTitle);
+            replyIntent.putExtra(EXTRA_DESC, eventDescr);
+            replyIntent.putExtra(EXTRA_HOUR, timeToNotify);
+            replyIntent.putExtra(EXTRA_DATE, eventDate);
             setResult(RESULT_OK, replyIntent);
         }
 
         finish();
+
     }
 
     private void addnumbers (Integer[] mins) {
@@ -191,27 +213,9 @@ public class AddEventActivity extends AppCompatActivity implements AdapterView.O
     }
 
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String text = parent.getItemAtPosition(position).toString();
-        String newText = text;
 
-        if (text.length() == 1) {
-            newText = "0" + text;
-        }
 
-        if (parent.getId() == R.id.spinnerHours) {
-            editTextHrs.setText(newText);
-        } else {
-            editTextMins.setText(newText);
-        }
-        Log.d("value of drop down", text);
-    }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
 
     void showPopup (View v, int popup) {
         // inflate the layout of the popup window

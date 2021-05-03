@@ -48,8 +48,8 @@ public class DailyViewActivity extends AppCompatActivity {
         rv.setAdapter(eventAdapter);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
-
         eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
+
 
         eventViewModel.getAllEvents().observe(this, events -> {
             eventAdapter.submitList(events);
