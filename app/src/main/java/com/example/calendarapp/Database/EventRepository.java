@@ -1,10 +1,8 @@
-package com.example.calendarapp;
+package com.example.calendarapp.Database;
 
 import android.app.Application;
-import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.Update;
 
 import java.util.List;
 

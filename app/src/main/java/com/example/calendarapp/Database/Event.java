@@ -1,4 +1,4 @@
-package com.example.calendarapp;
+package com.example.calendarapp.Database;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;

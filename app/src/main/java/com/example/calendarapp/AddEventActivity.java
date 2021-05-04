@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Notification;
@@ -27,7 +28,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class AddEventActivity extends AppCompatActivity  {
     Button btnBack;
@@ -87,11 +92,13 @@ public class AddEventActivity extends AppCompatActivity  {
 
 
         btnBack.setOnClickListener(v -> prevActivity());
-
         btnSubmit.setOnClickListener(v -> {
-            saveEvent();
+            try {
+                saveEvent();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         });
-
         btnPickTime.setOnClickListener(v -> selectTime());
         btnPickDate.setOnClickListener(v -> selectDate());
 
@@ -129,29 +136,35 @@ public class AddEventActivity extends AppCompatActivity  {
         timePickerDialog.show();
     }
 
-    private void setAlarm(Calendar target){
+    private void setAlarm (String name, String descr, String date, String time) throws ParseException {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        Intent intent = new Intent(getApplicationContext(), AlarmBroadcast.class);
+        intent.putExtra("name", name);
+        intent.putExtra("descr", descr);
+        intent.putExtra("date", date);
+        intent.putExtra("time", time);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
+
+        String dateAndTime = date + "" + timeToNotify;
+
+        @SuppressLint("SimpleDateFormat")
+        DateFormat formatter = new SimpleDateFormat("d/M/yyyy hh:mm");
+
+        try {
+            Date newDate = formatter.parse(dateAndTime);
+            assert newDate != null;
+            alarmManager.set(AlarmManager.RTC_WAKEUP, newDate.getTime(), pendingIntent);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+
 
     }
-
-//    private void saveAlarm() {
-//        String date = etDate.getText().toString();
-//        int year = Integer.parseInt(date.substring(date.length() - 4));
-//        int month = Integer.parseInt(date.substring(3, 5));
-//        int day = Integer.parseInt(date.substring(0, 2));
-//        int hour = Integer.parseInt(editTextHrs.getText().toString());
-//        int mins = Integer.parseInt(editTextMins.getText().toString());
-//
-//        Calendar c = Calendar.getInstance();
-//        c.set(year, month, day, hour, mins);
-//
-//
-//        Intent intent = new Intent(getBaseContext(), AddEventActivity.class);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), req1, intent, 0);
-//        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-//        alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
-//        Toast.makeText(this, "Reminder saved", Toast.LENGTH_LONG).show();
-//
-//    }
 
     private void sendNotification() {
         String eventName = editTextEventName.getText().toString();
@@ -178,7 +191,7 @@ public class AddEventActivity extends AppCompatActivity  {
         startActivity(intent);
     }
 
-    private void saveEvent() {
+    private void saveEvent() throws ParseException {
         Intent replyIntent = new Intent();
         if (TextUtils.isEmpty(textViewDatePicked.getText()) ||
                 TextUtils.isEmpty(textViewTimePicked.getText())) {
@@ -200,6 +213,8 @@ public class AddEventActivity extends AppCompatActivity  {
             replyIntent.putExtra(EXTRA_HOUR, timeToNotify);
             replyIntent.putExtra(EXTRA_DATE, eventDate);
             setResult(RESULT_OK, replyIntent);
+
+            setAlarm(eventTitle, eventDescr, eventDate, timeToNotify);
         }
 
         finish();

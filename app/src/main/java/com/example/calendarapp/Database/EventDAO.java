@@ -1,4 +1,4 @@
-package com.example.calendarapp;
+package com.example.calendarapp.Database;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;

@@ -1,4 +1,4 @@
-package com.example.calendarapp;
+package com.example.calendarapp.ViewAdapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +10,8 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.example.calendarapp.Database.Event;
+import com.example.calendarapp.R;
 
 public class EventAdapter extends ListAdapter<Event, EventHolder> {
 
@@ -42,7 +40,7 @@ public class EventAdapter extends ListAdapter<Event, EventHolder> {
         return getItem(position);
     }
 
-    static class WordDiff extends DiffUtil.ItemCallback<Event> {
+    public static class WordDiff extends DiffUtil.ItemCallback<Event> {
 
         @Override
         public boolean areItemsTheSame(@NonNull Event oldItem, @NonNull Event newItem) {

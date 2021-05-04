@@ -1,4 +1,4 @@
-package com.example.calendarapp;
+package com.example.calendarapp.Database;
 
 import android.app.Application;
 

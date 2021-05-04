@@ -2,25 +2,21 @@ package com.example.calendarapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import java.util.List;
+import com.example.calendarapp.Database.Event;
+import com.example.calendarapp.ViewAdapter.EventAdapter;
+import com.example.calendarapp.Database.EventViewModel;
 
 public class DailyViewActivity extends AppCompatActivity {
     Button btnCalendarView;
