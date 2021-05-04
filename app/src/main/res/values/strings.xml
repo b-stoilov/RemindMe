@@ -28,4 +28,7 @@
     <string name="textview">TextView</string>
     <string name="no_time">no time</string>
     <string name="no_date">no date</string>
+    <string name="snooze">Snooze</string>
+    <string name="flashlight">Flashlight</string>
+    <string name="_90_charging">90% Charging</string>
 </resources>

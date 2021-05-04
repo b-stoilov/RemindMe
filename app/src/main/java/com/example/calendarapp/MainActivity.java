@@ -1,35 +1,75 @@
 package com.example.calendarapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.Button;
-import android.widget.CalendarView;
+import android.widget.Toast;
+
+import com.example.calendarapp.Database.Event;
+import com.example.calendarapp.ViewAdapter.EventAdapter;
+import com.example.calendarapp.Database.EventViewModel;
 
 public class MainActivity extends AppCompatActivity {
-
+    Button btnCalendarView;
     Button btnAddEvent;
-    Button btnDailyView;
-    CalendarView calendarView;
+    RecyclerView rv;
+    EventAdapter eventAdapter;
+
+    public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
+    private EventViewModel eventViewModel;
+
+    private NotificationManagerCompat notificationManager;
+
+    String title;
+    String descr;
+    String hour;
+    String date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_main_activity);
+        setContentView(R.layout.fragment_daily_view);
 
-        btnAddEvent = findViewById(R.id.buttonAddEvent);
-        btnDailyView = (Button) findViewById(R.id.buttonDailyView);
+        rv = findViewById(R.id.recycler_view);
+        eventAdapter = new EventAdapter(new EventAdapter.WordDiff());
+        rv.setAdapter(eventAdapter);
+        rv.setLayoutManager(new LinearLayoutManager(this));
 
-        btnDailyView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDailyView();
-            }
+        eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
+
+
+        eventViewModel.getAllEvents().observe(this, events -> {
+            eventAdapter.submitList(events);
         });
-        
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                eventViewModel.delete(eventAdapter.getEventAtPos(viewHolder.getAdapterPosition()));
+                Toast.makeText(MainActivity.this, "Event deleted", Toast.LENGTH_SHORT).show();
+            }
+        }).attachToRecyclerView(rv);
+
+        btnCalendarView = findViewById(R.id.buttonCalendarView);
+        btnAddEvent = findViewById(R.id.buttonAdd);
+
+        btnCalendarView.setOnClickListener(v -> openCalendarView());
+
         btnAddEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,14 +79,39 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
     private void openAddEvent() {
         Intent intent = new Intent(this, AddEventActivity.class);
-        intent.putExtra("from", "calendarView");
-        startActivityForResult(intent, DailyViewActivity.NEW_WORD_ACTIVITY_REQUEST_CODE);
+        intent.putExtra("from", "dailyView");
+        startActivityForResult(intent, NEW_WORD_ACTIVITY_REQUEST_CODE);
     }
 
-    private void openDailyView() {
-        Intent intent = new Intent(this, DailyViewActivity.class);
+    private void openCalendarView() {
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            String title = data.getStringExtra(AddEventActivity.EXTRA_TITLE);
+            String desc = data.getStringExtra(AddEventActivity.EXTRA_DESC);
+            String hour = data.getStringExtra(AddEventActivity.EXTRA_HOUR);
+            String date = data.getStringExtra(AddEventActivity.EXTRA_DATE);
+
+            Event event = new Event(title, desc, date, hour);
+
+            eventViewModel.insert(event);
+        } else {
+            Toast.makeText(
+                    getApplicationContext(),
+                    R.string.empty_not_saved,
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+
 }

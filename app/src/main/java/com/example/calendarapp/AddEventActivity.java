@@ -1,13 +1,10 @@
 package com.example.calendarapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -19,14 +16,10 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -39,11 +32,6 @@ public class AddEventActivity extends AppCompatActivity  {
     Button btnSubmit;
     Button btnPickTime;
     Button btnPickDate;
-    Spinner spinnerHours;
-    Spinner spinnerMinutes;
-    EditText editTextHrs;
-    EditText editTextMins;
-    EditText etDate;
     EditText editTextEventName;
     EditText editTextEventDescr;
     TextView textViewTimePicked;
@@ -60,8 +48,6 @@ public class AddEventActivity extends AppCompatActivity  {
     public static final String EXTRA_HOUR = "com.example.application.example.HOUR";
     public static final String EXTRA_DATE = "com.example.application.example.DATE";
 
-    final static int req1=1;
-    public String a = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,13 +78,7 @@ public class AddEventActivity extends AppCompatActivity  {
 
 
         btnBack.setOnClickListener(v -> prevActivity());
-        btnSubmit.setOnClickListener(v -> {
-            try {
-                saveEvent();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        });
+        btnSubmit.setOnClickListener(v -> saveEvent());
         btnPickTime.setOnClickListener(v -> selectTime());
         btnPickDate.setOnClickListener(v -> selectDate());
 
@@ -110,12 +90,9 @@ public class AddEventActivity extends AppCompatActivity  {
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                selectedDate = day + "/" + (month + 1) + "/" + year;
-                textViewDatePicked.setText(selectedDate);
-            }
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year1, month1, dayOfMonth) -> {
+            selectedDate = day + "-" + (month1 + 1) + "-" + year1;
+            textViewDatePicked.setText(selectedDate);
         }, year, month, day);
 
         datePickerDialog.show();
@@ -126,35 +103,30 @@ public class AddEventActivity extends AppCompatActivity  {
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int mins = calendar.get(Calendar.MINUTE);
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                timeToNotify = hourOfDay + ":" + minute;
-                textViewTimePicked.setText(timeToNotify);
-            }
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, (view, hourOfDay, minute) -> {
+            timeToNotify = hourOfDay + ":" + minute;
+            textViewTimePicked.setText(FormatTime(hourOfDay, minute));
         }, hour, mins, false);
         timePickerDialog.show();
     }
 
-    private void setAlarm (String name, String descr, String date, String time) throws ParseException {
+    private void setAlarm(String name, String date, String time)  {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         Intent intent = new Intent(getApplicationContext(), AlarmBroadcast.class);
         intent.putExtra("name", name);
-        intent.putExtra("descr", descr);
         intent.putExtra("date", date);
         intent.putExtra("time", time);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
-        String dateAndTime = date + "" + timeToNotify;
+        String dateAndTime = date + " " + timeToNotify;
 
-        @SuppressLint("SimpleDateFormat")
-        DateFormat formatter = new SimpleDateFormat("d/M/yyyy hh:mm");
+
+        DateFormat formatter = new SimpleDateFormat("d-M-yyyy hh:mm");
 
         try {
             Date newDate = formatter.parse(dateAndTime);
-            assert newDate != null;
             alarmManager.set(AlarmManager.RTC_WAKEUP, newDate.getTime(), pendingIntent);
 
         } catch (ParseException e) {
@@ -162,36 +134,44 @@ public class AddEventActivity extends AppCompatActivity  {
         }
 
 
-
+        finish();
 
     }
 
-    private void sendNotification() {
-        String eventName = editTextEventName.getText().toString();
-        String eventDescription = editTextEventDescr.getText().toString();
+    public String FormatTime(int hour, int minute) {
 
-        Notification notification = new NotificationCompat.Builder(this, App.CHANNEL_1)
-                .setSmallIcon(R.drawable.ic_baseline_5g_24)
-                .setContentTitle(eventName)
-                .setContentText(eventDescription)
-                .setCategory(NotificationCompat.CATEGORY_ALARM)
-                .build();
+        String time = "";
+        String formattedMinute;
 
-        notificationManager.notify(1, notification);
+        if (minute / 10 == 0) {
+            formattedMinute = "0" + minute;
+        } else {
+            formattedMinute = "" + minute;
+        }
+
+
+        if (hour == 0) {
+            time = "12" + ":" + formattedMinute + " AM";
+        } else if (hour < 12) {
+            time = hour + ":" + formattedMinute + " AM";
+        } else if (hour == 12) {
+            time = "12" + ":" + formattedMinute + " PM";
+        } else {
+            int temp = hour - 12;
+            time = temp + ":" + formattedMinute + " PM";
+        }
+
+
+        return time;
     }
-
 
     private void prevActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
-    private void openCalendar() {
-        Intent intent = new Intent(this, CalendarActivity.class);
-        startActivity(intent);
-    }
 
-    private void saveEvent() throws ParseException {
+    private void saveEvent() {
         Intent replyIntent = new Intent();
         if (TextUtils.isEmpty(textViewDatePicked.getText()) ||
                 TextUtils.isEmpty(textViewTimePicked.getText())) {
@@ -199,13 +179,11 @@ public class AddEventActivity extends AppCompatActivity  {
         } else {
             String eventTitle = editTextEventName.getText().toString();
             String eventDescr = editTextEventDescr.getText().toString();
+            String eventDate = textViewDatePicked.getText().toString();
 
             if (eventDescr.isEmpty()) {
                 eventDescr = null;
             }
-
-
-            String eventDate = textViewDatePicked.getText().toString();
 
 
             replyIntent.putExtra(EXTRA_TITLE, eventTitle);
@@ -214,10 +192,9 @@ public class AddEventActivity extends AppCompatActivity  {
             replyIntent.putExtra(EXTRA_DATE, eventDate);
             setResult(RESULT_OK, replyIntent);
 
-            setAlarm(eventTitle, eventDescr, eventDate, timeToNotify);
+            setAlarm(eventTitle, eventDate, timeToNotify);
         }
 
-        finish();
 
     }
 
