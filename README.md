@@ -13,7 +13,7 @@ Right after the applicatioon starts, you will be directed to a window called 'Da
 
 RemindMe uses a the following technologies to work properly:
 
-- [SQL] - Pretty standard way of working with data
+- [SQLite] - Pretty standard way of working with data
 - [Java] - Whole project done on Java
 - [Room] - The local database that is used for this application
 
@@ -32,6 +32,6 @@ Concerning the UI:
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
 
-   [sql]:  <https://en.wikipedia.org/wiki/SQL>
+   [sqlite]:  <https://sqlite.org/index.html>
    [room]: <https://developer.android.com/jetpack/androidx/releases/room>
    [java]: <https://www.java.com/en/>
