@@ -19,7 +19,6 @@ import com.example.calendarapp.ViewAdapter.EventAdapter;
 import com.example.calendarapp.Database.EventViewModel;
 
 public class MainActivity extends AppCompatActivity {
-    Button btnCalendarView;
     Button btnAddEvent;
     RecyclerView rv;
     EventAdapter eventAdapter;
@@ -65,10 +64,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }).attachToRecyclerView(rv);
 
-        btnCalendarView = findViewById(R.id.buttonCalendarView);
         btnAddEvent = findViewById(R.id.buttonAdd);
-
-        btnCalendarView.setOnClickListener(v -> openCalendarView());
 
         btnAddEvent.setOnClickListener(new View.OnClickListener() {
             @Override

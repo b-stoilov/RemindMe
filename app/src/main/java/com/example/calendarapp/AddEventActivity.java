@@ -91,7 +91,7 @@ public class AddEventActivity extends AppCompatActivity  {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year1, month1, dayOfMonth) -> {
-            selectedDate = day + "-" + (month1 + 1) + "-" + year1;
+            selectedDate = dayOfMonth + "-" + (month1 + 1) + "-" + year1;
             textViewDatePicked.setText(selectedDate);
         }, year, month, day);
 
@@ -203,9 +203,6 @@ public class AddEventActivity extends AppCompatActivity  {
             mins[i] = i;
         }
     }
-
-
-
 
 
 

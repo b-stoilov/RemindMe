@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">CalendarApp</string>
     <string name="calendar_view">Calendar View</string>
-    <string name="daily_view">Daily view</string>
+    <string name="daily">Daily</string>
+    <string name ="view">View</string>
+    <string name = "daily_view">Daily View</string>
     <string name="add">add</string>
     <string name="submit">Submit</string>
     <string name="add_event">Add event</string>
