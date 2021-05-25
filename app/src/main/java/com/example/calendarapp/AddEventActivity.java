@@ -48,6 +48,12 @@ public class AddEventActivity extends AppCompatActivity  {
     public static final String EXTRA_HOUR = "com.example.application.example.HOUR";
     public static final String EXTRA_DATE = "com.example.application.example.DATE";
 
+    private int monthSelected;
+    private int daySelected;
+    private int yearSelected;
+    private int hourSelected;
+    private int minSelected;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +84,13 @@ public class AddEventActivity extends AppCompatActivity  {
 
 
         btnBack.setOnClickListener(v -> prevActivity());
-        btnSubmit.setOnClickListener(v -> saveEvent());
+        btnSubmit.setOnClickListener(v -> {
+            if (missingOptionsCheck()) {
+                showPopup(v, R.layout.popup_empty_field);
+            } else {
+                saveEvent();
+            }
+        });
         btnPickTime.setOnClickListener(v -> selectTime());
         btnPickDate.setOnClickListener(v -> selectDate());
 
@@ -93,6 +105,9 @@ public class AddEventActivity extends AppCompatActivity  {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year1, month1, dayOfMonth) -> {
             selectedDate = dayOfMonth + "-" + (month1 + 1) + "-" + year1;
             textViewDatePicked.setText(selectedDate);
+            daySelected = dayOfMonth;
+            monthSelected = month1;
+            yearSelected = year1;
         }, year, month, day);
 
         datePickerDialog.show();
@@ -105,7 +120,10 @@ public class AddEventActivity extends AppCompatActivity  {
 
         TimePickerDialog timePickerDialog = new TimePickerDialog(this, (view, hourOfDay, minute) -> {
             timeToNotify = hourOfDay + ":" + minute;
+            hourSelected = hourOfDay;
+            minSelected = minute;
             textViewTimePicked.setText(FormatTime(hourOfDay, minute));
+
         }, hour, mins, false);
         timePickerDialog.show();
     }
@@ -196,6 +214,33 @@ public class AddEventActivity extends AppCompatActivity  {
         }
 
 
+    }
+
+    private boolean missingOptionsCheck () {
+        Calendar calendar = Calendar.getInstance();
+
+        boolean incorrectDate = (daySelected < calendar.get(Calendar.DAY_OF_MONTH)) &&
+                (monthSelected < calendar.get(Calendar.MONTH)) &&
+                (yearSelected < calendar.get(Calendar.YEAR)) ||
+                (monthSelected < calendar.get(Calendar.MONTH)) &&
+                        (yearSelected < calendar.get(Calendar.YEAR)) ||
+                (yearSelected < calendar.get(Calendar.YEAR));
+
+        boolean incorrectTime =  daySelected == calendar.get(Calendar.DAY_OF_MONTH) &&
+                monthSelected == calendar.get(Calendar.MONTH) &&
+                yearSelected == calendar.get(Calendar.YEAR) &&
+                (
+                        ( (minSelected < calendar.get(Calendar.MINUTE)&&
+                        hourSelected < calendar.get(Calendar.HOUR_OF_DAY) ) ||
+                                (hourSelected < calendar.get(Calendar.HOUR_OF_DAY)))
+                );
+
+
+        return editTextEventName.getText().toString() == null ||
+                editTextEventDescr.getText().toString() == null ||
+                textViewDatePicked.getText().toString() == null ||
+                textViewTimePicked.getText().toString() == null ||
+                incorrectDate || incorrectTime;
     }
 
     private void addnumbers (Integer[] mins) {
