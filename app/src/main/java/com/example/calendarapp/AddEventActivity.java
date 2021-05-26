@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -86,7 +87,7 @@ public class AddEventActivity extends AppCompatActivity  {
         btnBack.setOnClickListener(v -> prevActivity());
         btnSubmit.setOnClickListener(v -> {
             if (missingOptionsCheck()) {
-                showPopup(v, R.layout.popup_empty_field);
+                Toast.makeText(AddEventActivity.this, "Invalid details entered! Check again", Toast.LENGTH_SHORT).show();
             } else {
                 saveEvent();
             }
@@ -219,12 +220,9 @@ public class AddEventActivity extends AppCompatActivity  {
     private boolean missingOptionsCheck () {
         Calendar calendar = Calendar.getInstance();
 
-        boolean incorrectDate = (daySelected < calendar.get(Calendar.DAY_OF_MONTH)) &&
-                (monthSelected < calendar.get(Calendar.MONTH)) &&
-                (yearSelected < calendar.get(Calendar.YEAR)) ||
-                (monthSelected < calendar.get(Calendar.MONTH)) &&
-                        (yearSelected < calendar.get(Calendar.YEAR)) ||
-                (yearSelected < calendar.get(Calendar.YEAR));
+        boolean incorrectDate =  yearSelected <= calendar.get(Calendar.YEAR) &&
+                monthSelected <= calendar.get(Calendar.MONTH) + 1 &&
+                daySelected < calendar.get(Calendar.DAY_OF_MONTH);
 
         boolean incorrectTime =  daySelected == calendar.get(Calendar.DAY_OF_MONTH) &&
                 monthSelected == calendar.get(Calendar.MONTH) &&
